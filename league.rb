@@ -44,4 +44,17 @@ class League
     end
     match_day.enter_match(ts_a, ts_b)
   end
+
+  def to_s
+    return "" if @match_days.length == 0
+    @match_days.map do |day|
+      if day.team_ranks.length
+        day.team_ranks.map do |team_rank|
+          team_rank.to_s
+        end
+      else
+        ""
+      end
+    end.join(" ")
+  end
 end

@@ -20,4 +20,8 @@ class Match
       @loser = @team_score_a
     end
   end
+
+  def to_s
+    "Match #{@team_score_a} #{@team_score_b}"
+  end
 end

@@ -5,4 +5,8 @@ class TeamRank
     @team = team
     @rank = rank
   end
+
+  def to_s
+    "Team: #{@team} - Rank: #{@rank}"
+  end
 end

@@ -28,15 +28,20 @@ unless file
   exit 1
 end
 
-file.each { |line|
-  competitors = line.scan(/[,\n ]*([a-zA-Z ]+) (\d+)/)
-  # skip invalid lines
-  next unless competitors
+begin
+  file.each { |line|
+    competitors = line.scan(/[,\n ]*([a-zA-Z ]+) (\d+)/)
+    # skip invalid lines (ones that don't match regex)
+    next unless competitors
 
-  team_result_a = TeamScore.new(competitors[0][0], competitors[0][1])
-  team_result_b = TeamScore.new(competitors[1][0], competitors[1][1])
+    team_result_a = TeamScore.new(competitors[0][0], competitors[0][1])
+    team_result_b = TeamScore.new(competitors[1][0], competitors[1][1])
 
-  league.enter_match team_result_a, team_result_b
-}
+    league.enter_match team_result_a, team_result_b
+  }
+  file.close()
+rescue
+  # just do the report and get out if the stream terminates, no rescue required
+end
 
 league.day_report(true)

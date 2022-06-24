@@ -23,7 +23,7 @@ class Day
     !@team_ranks.find { |a| a.team == team_score.team }.nil?
   end
 
-  def teams
-    @team_ranks.sort { |a, b| b.team <=> a.team }.sort { |a, b| b.rank <=> a.rank }
+  def to_s
+    "Day Ranks: #{@team_ranks.length}"
   end
 end
