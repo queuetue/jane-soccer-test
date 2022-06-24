@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 
-file = nil
+require "./league.rb"
+require "./team_score.rb"
 
-teams = {}
-days = []
+file = nil
+league = League.new
 
 case ARGV.length
 when 0
@@ -28,32 +29,14 @@ unless file
 end
 
 file.each { |line|
-  matches = line.scan(/[,\n ]*([a-zA-Z ]+) (\d+)/)
-
+  competitors = line.scan(/[,\n ]*([a-zA-Z ]+) (\d+)/)
   # skip invalid lines
-  next unless matches
+  next unless competitors
 
-  # New day if we've seen one of the current teams already in the current day
-  # TODO: Is there another way to guess "next day"? Do the teams change?  This is how we do it for now.
+  team_result_a = TeamScore.new(competitors[0][0], competitors[0][1])
+  team_result_b = TeamScore.new(competitors[1][0], competitors[1][1])
 
-  if (days.length < 1) || (days[-1][:teams].include? matches[0][0]) || (days[-1][:teams].include? matches[1][0])
-    if days.length > 0
-      puts "Matchday #{days.length}"
-      teams.sort { |a, b| b[1] <=> a[1] }[0..2].each do |team|
-        puts "#{team[0]} #{team[1]} pts"
-      end
-      puts ""
-    end
-    days << { teams: [] }
-  end
-
-  days[-1][:teams] << matches[0][0]
-  days[-1][:teams] << matches[1][0]
-
-  if matches[0][1] == matches[1][1]
-    teams[matches[0][0]] = (teams[matches[0][0]] || 0) + 1
-    teams[matches[1][0]] = (teams[matches[0][0]] || 0) + 1
-  else
-    teams[matches[0][0]] = (teams[matches[0][0]] || 0) + 3
-  end
+  league.enter_match team_result_a, team_result_b
 }
+
+league.day_report(true)
